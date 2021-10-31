@@ -24,7 +24,7 @@ async function run() {
         await client.connect();
         const database = client.db('travelWorld')
         const placesCollection = database.collection('place')
-        const orderCollection = database.collection('orders')
+        const ordersCollection = database.collection('orders')
 
         // GET API 
         app.get('/places', async (req, res) => {
@@ -55,8 +55,24 @@ async function run() {
         // ADD order API
         app.post('/orders', async (req, res) => {
             const order = req.body;
-            const result = await orderCollection.insertOne(order)
+            const result = await ordersCollection.insertOne(order)
             res.json(result)
+        })
+
+        // GET orders API
+        app.get('/orders', async (req, res) => {
+            const cursor = ordersCollection.find({})
+            const services = await cursor.toArray();
+            res.json(services);
+        })
+        // DELETE my order API
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.deleteOne(query);
+            // console.log('Delate id', result);
+            res.json(result);
+
         })
 
     }
