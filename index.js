@@ -75,6 +75,19 @@ async function run() {
 
         })
 
+        app.put('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    status: "processing"
+                }
+            }
+            const result = await ordersCollection.updateOne(filter, updateDoc)
+            res.json(result)
+        }
+        )
+
     }
 
     finally {
